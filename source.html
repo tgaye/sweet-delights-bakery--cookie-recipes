@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sweet Delights Bakery | Cookie Recipes</title>
+    <style>
+        :root {
+            --primary: #f8a978;
+            --secondary: #f6e4c4;
+            --accent: #d57149;
+            --dark: #5a3921;
+            --light: #fff9f0;
+            --text: #3a2a1a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .logo img {
+            height: 60px;
+            width: auto;
+        }
+
+        .logo h1 {
+            font-family: 'Pacifico', cursive;
+            color: white;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            padding: 1rem 0;
+            background-color: var(--dark);
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-radius: 20px;
+        }
+
+        nav a:hover {
+            background-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .hero {
+            background: url('http://localhost:3001/output_images/man303jm-6m1ef919/warm-bakery-interior_1280x720.png') center/cover;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+            padding: 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .hero-content h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--accent);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            background-color: var(--primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            display: inline-block;
+            padding-bottom: 1rem;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background-color: var(--accent);
+            border-radius: 2px;
+        }
+
+        .recipe-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .recipe-img {
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .recipe-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .recipe-card:hover .recipe-img img {
+            transform: scale(1.1);
+        }
+
+        .recipe-content {
+            padding: 1.5rem;
+        }
+
+        .recipe-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .recipe-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .timer-btn {
+            background-color: var(--secondary);
+            color: var(--dark);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .timer-btn:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .timer-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .timer-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .timer-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .timer-display {
+            font-size: 3rem;
+            margin: 1rem 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .timer-controls button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .timer-start {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .timer-start:hover {
+            background-color: var(--primary);
+        }
+
+        .timer-reset {
+            background-color: #eee;
+            color: var(--text);
+        }
+
+        .timer-reset:hover {
+            background-color: #ddd;
+        }
+
+        .close-timer {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        .calculator {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 3rem;
+        }
+
+        .calculator h3 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .calculator-item {
+            margin-bottom: 1rem;
+        }
+
+        .calculator-item label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .calculator-item input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .calculator-results {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: var(--secondary);
+            border-radius: 10px;
+        }
+
+        .calculator-results h4 {
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .video-guides {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .video-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .video-thumbnail {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .play-btn:hover {
+            background-color: var(--accent);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .play-btn::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 0;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-left: 25px solid var(--dark);
+            margin-left: 5px;
+        }
+
+        .video-info {
+            padding: 1.5rem;
+        }
+
+        .video-info h4 {
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-icons a {
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h2 {
+                font-size: 2rem;
+            }
+            
+            .logo h1 {
+                font-size: 1.8rem;
+            }
+            
+            nav {
+                flex-wrap: wrap;
+            }
+            
+            nav a {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+    <link rel="icon" type="image/png" href="http://localhost:3001/output_images/man303jm-6m1ef919/favicon-cookie-icon_32x32.png">
+
+<base target="_self">
+
+
+    <header>
+        <div class="logo">
+            <img src="http://localhost:3001/output_images/man303jm-6m1ef919/bakery-logo-icon_150x150.png" alt="Sweet Delights Logo">
+            <h1>Sweet Delights</h1>
+        </div>
+    </header>
+    
+    <nav>
+        <a href="#recipes">Recipes</a>
+        <a href="#calculator">Ingredient Calculator</a>
+        <a href="#videos">Video Guides</a>
+        <a href="#about">About Us</a>
+    </nav>
+    
+    <section class="hero">
+        <div class="hero-content">
+            <h2>Bake Perfect Cookies Every Time</h2>
+            <p>Discover our collection of delicious cookie recipes with interactive baking timers and step-by-step video guides</p>
+            <a href="#recipes" class="btn">Explore Recipes</a>
+        </div>
+    </section>
+    
+    <section id="recipes" class="container">
+        <div class="section-title">
+            <h2>Featured Cookie Recipes</h2>
+        </div>
+        
+        <div class="recipe-grid">
+            <div class="recipe-card">
+                <div class="recipe-img">
+                    <img src="http://localhost:3001/output_images/man303jm-6m1ef919/classic-chocolate-chip-cookies_800x600.png" alt="Classic Chocolate Chip Cookies">
+                </div>
+                <div class="recipe-content">
+                    <h3>Classic Chocolate Chip</h3>
+                    <div class="recipe-meta">
+                        <span>Prep: 15 min</span>
+                        <span>Cook: 12 min</span>
+                    </div>
+                    <p>The perfect balance of crispy edges and chewy centers with melty chocolate chips in every bite.</p>
+                    <button class="timer-btn" data-time="720">Start Timer (12 min)</button>
+                </div>
+            </div>
+            
+            <div class="recipe-card">
+                <div class="recipe-img">
+                    <img src="http://localhost:3001/output_images/man303jm-6m1ef919/salted-caramel-cookies_800x600.png" alt="Salted Caramel Cookies">
+                </div>
+                <div class="recipe-content">
+                    <h3>Salted Caramel Delight</h3>
+                    <div class="recipe-meta">
+                        <span>Prep: 20 min</span>
+                        <span>Cook: 15 min</span>
+                    </div>
+                    <p>Buttery cookies with gooey caramel centers and a sprinkle of sea salt for the perfect sweet-salty balance.</p>
+                    <button class="timer-btn" data-time="900">Start Timer (15 min)</button>
+                </div>
+            </div>
+            
+            <div class="recipe-card">
+                <div class="recipe-img">
+                    <img src="http://localhost:3001/output_images/man303jm-6m1ef919/double-chocolate-cookies_800x600.png" alt="Double Chocolate Cookies">
+                </div>
+                <div class="recipe-content">
+                    <h3>Double Chocolate</h3>
+                    <div class="recipe-meta">
+                        <span>Prep: 15 min</span>
+                        <span>Cook: 10 min</span>
+                    </div>
+                    <p>Rich chocolate cookies packed with chocolate chunks for the ultimate chocolate lover's treat.</p>
+                    <button class="timer-btn" data-time="600">Start Timer (10 min)</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="calculator" class="container">
+        <div class="section-title">
+            <h2>Ingredient Calculator</h2>
+        </div>
+        
+        <div class="calculator">
+            <h3>Customize Your Recipe</h3>
+            <div class="calculator-grid">
+                <div class="calculator-item">
+                    <label for="servings">Number of Servings</label>
+                    <input type="number" id="servings" min="1" value="12">
+                </div>
+                <div class="calculator-item">
+                    <label for="recipe">Select Recipe</label>
+                    <select id="recipe" class="calculator-item">
+                        <option value="chocolate-chip">Classic Chocolate Chip</option>
+                        <option value="caramel">Salted Caramel</option>
+                        <option value="double-chocolate">Double Chocolate</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="calculator-results">
+                <h4>Ingredients Needed</h4>
+                <div id="ingredient-list">
+                    <!-- Results will be populated here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="videos" class="container">
+        <div class="section-title">
+            <h2>Video Baking Guides</h2>
+        </div>
+        
+        <div class="video-guides">
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    <img src="http://localhost:3001/output_images/man303jm-6m1ef919/cookie-dough-technique_600x400.png" alt="Cookie Dough Technique">
+                    <div class="play-btn"></div>
+                </div>
+                <div class="video-info">
+                    <h4>Perfect Cookie Dough Technique</h4>
+                    <p>Learn the secrets to making the perfect cookie dough every time</p>
+                </div>
+            </div>
+            
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    <img src="http://localhost:3001/output_images/man303jm-6m1ef919/baking-tips_600x400.png" alt="Baking Tips">
+                    <div class="play-btn"></div>
+                </div>
+                <div class="video-info">
+                    <h4>Professional Baking Tips</h4>
+                    <p>Essential tips from professional bakers for perfect cookies</p>
+                </div>
+            </div>
+            
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    <img src="http://localhost:3001/output_images/man303jm-6m1ef919/decorating-ideas_600x400.png" alt="Decorating Ideas">
+                    <div class="play-btn"></div>
+                </div>
+                <div class="video-info">
+                    <h4>Creative Cookie Decorating</h4>
+                    <p>Fun and creative ways to decorate your cookies</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <div class="timer-modal">
+        <div class="timer-content">
+            <button class="close-timer">×</button>
+            <h3>Baking Timer</h3>
+            <div class="timer-display" id="timer-display">12:00</div>
+            <div class="timer-controls">
+                <button class="timer-start">Start</button>
+                <button class="timer-reset">Reset</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About Sweet Delights</h3>
+                <p>We're passionate about baking and sharing our favorite cookie recipes with the world.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#recipes">Recipes</a></li>
+                    <li><a href="#calculator">Calculator</a></li>
+                    <li><a href="#videos">Videos</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Connect With Us</h3>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>© 2025 Sweet Delights Bakery. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Timer functionality
+        const timerModal = document.querySelector('.timer-modal');
+        const timerDisplay = document.getElementById('timer-display');
+        const timerStartBtn = document.querySelector('.timer-start');
+        const timerResetBtn = document.querySelector('.timer-reset');
+        const closeTimerBtn = document.querySelector('.close-timer');
+        const timerBtns = document.querySelectorAll('.timer-btn');
+        
+        let timeLeft = 0;
+        let timerInterval;
+        
+        timerBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                timeLeft = parseInt(this.dataset.time);
+                updateTimerDisplay();
+                timerModal.classList.add('active');
+            });
+        });
+        
+        closeTimerBtn.addEventListener('click', function() {
+            timerModal.classList.remove('active');
+            clearInterval(timerInterval);
+        });
+        
+        timerStartBtn.addEventListener('click', function() {
+            if (timerInterval) clearInterval(timerInterval);
+            
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timerDisplay.textContent = "Done!";
+                    return;
+                }
+                
+                timeLeft--;
+                updateTimerDisplay();
+            }, 1000);
+        });
+        
+        timerResetBtn.addEventListener('click', function() {
+            clearInterval(timerInterval);
+            timeLeft = parseInt(document.querySelector('.timer-btn.active')?.dataset.time || 0;
+            updateTimerDisplay();
+        });
+        
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+        
+        // Ingredient calculator
+        const servingsInput = document.getElementById('servings');
+        const recipeSelect = document.getElementById('recipe');
+        const ingredientList = document.getElementById('ingredient-list');
+        
+        const recipes = {
+            'chocolate-chip': {
+                flour: { amount: 2.25, unit: 'cups' },
+                sugar: { amount: 0.75, unit: 'cup' },
+                brownSugar: { amount: 0.75, unit: 'cup' },
+                butter: { amount: 1, unit: 'cup' },
+                eggs: { amount: 2, unit: '' },
+                vanilla: { amount: 2, unit: 'tsp' },
+                bakingSoda: { amount: 1, unit: 'tsp' },
+                salt: { amount: 1, unit: 'tsp' },
+                chocolate: { amount: 2, unit: 'cups' }
+            },
+            'caramel': {
+                flour: { amount: 2.5, unit: 'cups' },
+                sugar: { amount: 0.5, unit: 'cup' },
+                brownSugar: { amount: 1, unit: 'cup' },
+                butter: { amount: 1, unit: 'cup' },
+                eggs: { amount: 2, unit: '' },
+                vanilla: { amount: 2, unit: 'tsp' },
+                bakingSoda: { amount: 1, unit: 'tsp' },
+                salt: { amount: 0.5, unit: 'tsp' },
+                caramel: { amount: 1, unit: 'cup' }
+            },
+            'double-chocolate': {
+                flour: { amount: 1.5, unit: 'cups' },
+                sugar: { amount: 1, unit: 'cup' },
+                cocoa: { amount: 0.75, unit: 'cup' },
+                butter: { amount: 0.5, unit: 'cup' },
+                eggs: { amount: 2, unit: '' },
+                vanilla: { amount: 1, unit: 'tsp' },
+                bakingPowder: { amount: 1, unit: 'tsp' },
+                salt: { amount: 0.5, unit: 'tsp' },
+                chocolate: { amount: 1.5, unit: 'cups' }
+            }
+        };
+        
+        function updateIngredients() {
+            const servings = parseInt(servingsInput.value) || 12;
+            const recipe = recipeSelect.value;
+            const baseServings = 12;
+            const multiplier = servings / baseServings;
+            
+            let html = '<ul>';
+            
+            for (const [ingredient, details] of Object.entries(recipes[recipe])) {
+                const amount = details.amount * multiplier;
+                const unit = details.unit;
+                const displayAmount = amount % 1 === 0 ? amount : amount.toFixed(2);
+                
+                html += `<li>${displayAmount} ${unit} ${formatIngredientName(ingredient)}</li>`;
+            }
+            
+            html += '</ul>';
+            ingredientList.innerHTML = html;
+        }
+        
+        function formatIngredientName(name) {
+            return name
+                .replace(/([A-Z])/g, ' $1')
+                .replace(/^./, str => str.toUpperCase())
+                .replace('Brown Sugar', 'brown sugar')
+                .replace('Baking Soda', 'baking soda')
+                .replace('Baking Powder', 'baking powder');
+        }
+        
+        servingsInput.addEventListener('input', updateIngredients);
+        recipeSelect.addEventListener('change', updateIngredients);
+        
+        // Initialize
+        updateIngredients();
+        
+        // Video play buttons
+        const playButtons = document.querySelectorAll('.play-btn');
+        playButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                alert('Video player would open here in a full implementation');
+            });
+        });
+    </script>
+
+              
+          
+                
+          
+              
